@@ -1,12 +1,12 @@
 ---
 - name: reload systemd
-  sudo: yes
+  become: yes
   command: systemctl daemon-reload
 
 - name: restart traefik
-  sudo: yes
+  become: yes
   command: systemctl restart traefik
 
 - name: update-ca-trust
-  sudo: yes
+  become: yes
   command: update-ca-trust

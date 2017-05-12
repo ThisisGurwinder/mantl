@@ -1,6 +1,6 @@
 ---
 - name: install collectd packages
-  sudo: yes
+  become: yes
   yum:
     name: "{{ item }}"
     state: present
@@ -12,7 +12,7 @@
     - bootstrap
 
 - name: create collectd config directory
-  sudo: yes
+  become: yes
   file:
     path: /etc/collectd.d
     state: directory
@@ -21,7 +21,7 @@
     - collectd
 
 - name: create collectd plugin directory
-  sudo: yes
+  become: yes
   file:
     path: /usr/share/collectd/plugins
     state: directory
@@ -30,7 +30,7 @@
   - collectd
 
 - name: configure collectd
-  sudo: yes
+  become: yes
   template:
     src: collectd.conf.j2
     dest: /etc/collectd.conf
@@ -40,14 +40,14 @@
     - collectd
 
 - name: authorize collectd to make tcp connections
-  sudo: yes
+  become: yes
   seboolean: name=collectd_tcp_network_connect state=yes persistent=yes
   when: ansible_selinux.status == "enabled" and ansible_selinux.mode == "enforcing"
   tags:
     - collectd
 
 - name: enable collectd
-  sudo: yes
+  become: yes
   service:
     name: collectd
     enabled: yes

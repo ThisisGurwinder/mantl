@@ -7,7 +7,7 @@
     - collectd
 
 - name: install collectd mesos-agent plugin
-  sudo: yes
+  become: yes
   copy:
     src: mesos-agent.py
     dest: /usr/share/collectd/plugins
@@ -17,7 +17,7 @@
     - collectd
 
 - name: configure collectd mesos-agent plugin
-  sudo: yes
+  become: yes
   template:
     src: mesos-agent.conf.j2
     dest: /etc/collectd.d/mesos-agent.conf

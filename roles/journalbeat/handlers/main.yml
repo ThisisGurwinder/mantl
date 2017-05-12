@@ -1,7 +1,7 @@
 - name: systemd daemon-reload
-  sudo: yes
+  become: yes
   command: systemctl daemon-reload
 
 - name: restart journalbeat
-  sudo: yes
+  become: yes
   command: systemctl restart journalbeat

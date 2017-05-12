@@ -1,6 +1,6 @@
 ---
 - name: deploy iptables configuration
-  sudo: yes
+  become: yes
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -13,7 +13,7 @@
     - iptables
 
 - name: deploy iptables template
-  sudo: yes
+  become: yes
   template:
     src: iptables-core.tmpl.j2
     dest: /etc/consul-template/templates/iptables-core.tmpl

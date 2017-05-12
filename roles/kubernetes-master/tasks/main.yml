@@ -1,6 +1,6 @@
 ---
 - name: generate kubernetes manifests
-  sudo: yes
+  become: yes
   template:
     src: "{{ item }}.yml"
     dest: "{{ kube_manifest_dir }}/{{ item }}.yml"
@@ -19,7 +19,7 @@
     - kubernetes
 
 - name: generate kubernetes consul services
-  sudo: yes
+  become: yes
   template:
     src: kubernetes-consul.json
     dest: /etc/consul/kubernetes-consul.json
@@ -37,7 +37,7 @@
     - kubernetes
 
 - name: generate kubernetes podmaster manifests
-  sudo: yes
+  become: yes
   template:
     src: "{{ item }}.yml"
     dest: "/srv/kubernetes/manifests/{{ item }}.yml"
@@ -58,7 +58,7 @@
     - kubernetes
 
 - name: create kube-system namespace
-  sudo: yes
+  become: yes
   kube:
     resource: namespace
     name: kube-system
@@ -71,7 +71,7 @@
     - kubernetes
 
 - name: configure kubectl
-  sudo: no
+  become: no
   command: "/bin/kubectl {{ item }}"
   with_items:
     - config set-cluster mantl --server=http://127.0.0.1:8085

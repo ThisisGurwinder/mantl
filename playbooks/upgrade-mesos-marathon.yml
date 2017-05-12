@@ -12,14 +12,14 @@
       command: consul maint -enable -reason "{{ lookup('env', 'USER') }} upgrading Mesos"
 
     - name: stop and disable mesos-slave
-      sudo: yes
+      become: yes
       service:
         name: mesos-slave
         state: stopped
         enabled: no
 
     - name: remove mesos
-      sudo: yes
+      become: yes
       yum:
         name: mesos
         state: absent
@@ -46,20 +46,20 @@
 
     # mesos
     - name: remove mesos
-      sudo: yes
+      become: yes
       yum:
         name: mesos
         state: absent
 
     # marathon
     - name: remove marathon
-      sudo: yes
+      become: yes
       yum:
         name: mesos
         state: absent
 
     - name: remove marathon conf directory
-      sudo: yes
+      become: yes
       file:
         dest: /etc/marathon/conf
         state: absent
@@ -82,7 +82,7 @@
   tasks:
     # collectd gets confused after the mesos upgrade
     - name: restart collectd
-      sudo: yes
+      become: yes
       service:
         name: collectd
         state: restarted

@@ -1,6 +1,6 @@
 ---
 - name: deploy CA public and private keys
-  sudo: yes
+  become: yes
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -25,7 +25,7 @@
     - certificates
 
 - name: install generate-certificate
-  sudo: yes
+  become: yes
   yum:
     name: "{{ generate_certificate_package }}"
     state: present
@@ -33,7 +33,7 @@
     - certificates
 
 - name: create certificate destination directory
-  sudo: yes
+  become: yes
   file:
     state: directory
     path: "{{ destination }}"
@@ -44,7 +44,7 @@
     - certificates
 
 - name: generate certificates
-  sudo: yes
+  become: yes
   command: >
     generate-certificate
     --cacert /etc/pki/CA/ca.cert
@@ -64,7 +64,7 @@
     - certificates
 
 - name: create tls group
-  sudo: yes
+  become: yes
   group:
     name: tls
     state: present
@@ -72,7 +72,7 @@
     - certificates
 
 - name: set permissions on certificate files
-  sudo: yes
+  become: yes
   file:
     state: file
     path: "{{ item.path }}"
@@ -90,9 +90,9 @@
     - certificates
 
 - name: remove CA private keys
-  sudo: yes
+  become: yes
   file:
-    state: absent    
+    state: absent
     path: "{{ item.path }}"
   with_items:
     - path: /etc/pki/CA/ca.key

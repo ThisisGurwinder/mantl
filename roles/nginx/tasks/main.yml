@@ -1,6 +1,6 @@
 ---
 - name: encrypt admin password
-  sudo: yes
+  become: yes
   shell: htpasswd -Bnb admin {{ nginx_admin_password | quote }} | cut -f 2 -d ':'
   register: nginx_admin_password_encrypted
   changed_when: no
@@ -14,7 +14,7 @@
     - nginx
 
 - name: deploy nginx service
-  sudo: yes
+  become: yes
   template:
    src: "{{ item.src }}"
    dest: "{{ item.dest }}"

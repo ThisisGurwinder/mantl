@@ -8,7 +8,7 @@
     - collectd
 
 - name: install collectd zookeeper plugin
-  sudo: yes
+  become: yes
   copy:
     src: zookeeper-collectd-plugin.py
     dest: /usr/share/collectd/plugins/zookeeper.py
@@ -19,7 +19,7 @@
     - collectd
 
 - name: configure collectd zookeeper plugin
-  sudo: yes
+  become: yes
   template:
     src: zookeeper-collectd-plugin.conf.j2
     dest: /etc/collectd.d/zookeeper.conf

@@ -46,7 +46,7 @@
 
     - name: concatenate ca cert, ca private key
       run_once: yes
-      sudo: yes
+      become: yes
       copy:
         content: '{{ ca_cert }}\n{{ ca_key }}\n'
         dest: /tmp/ca-bundle.pem
@@ -54,7 +54,7 @@
 
     - name: upload ca cert to vault
       run_once: yes
-      sudo: yes
+      become: yes
       command: >
         vault write {{ vault_command_options }}
         pki/config/ca
@@ -62,7 +62,7 @@
 
     - name: delete ca cert
       run_once: yes
-      sudo: yes
+      become: yes
       file:
         state: absent
         path: /tmp/ca-bundle.pem
@@ -104,14 +104,14 @@
         --rule=key:{{ kv_lock_path|default('rotate-certs/lock') }}:write
 
     - name: copy cert rotation script
-      sudo: yes
+      become: yes
       copy:
         src: "{{ playbook_dir }}/rotate-certs.sh"
         dest: /tmp/rotate-certs
         mode: 0700
 
     - name: run cert rotation script
-      sudo: yes
+      become: yes
       shell:
         /tmp/rotate-certs
         --common-name {{ location|default(inventory_hostname) }}

@@ -1,12 +1,12 @@
 ---
 - name: reload systemd daemon
-  sudo: yes
+  become: yes
   command: systemctl daemon-reload
   tags:
     - zookeeper
 
 - name: restart zookeeper
-  sudo: yes
+  become: yes
   service:
     name: "{{ zookeeper_service }}"
     state: restarted

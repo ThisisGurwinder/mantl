@@ -1,6 +1,6 @@
 ---
 - name: create lastlog file
-  sudo: yes
+  become: yes
   file:
     path: /var/log/lastlog
     mode: 0644

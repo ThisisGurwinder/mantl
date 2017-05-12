@@ -29,7 +29,7 @@
     - include_vars: ../roles/dnsmasq/defaults/main.yml
 
     - name: deploy root ca
-      sudo: yes
+      become: yes
       copy:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -47,7 +47,7 @@
           dest: /etc/pki/tls/private/host.key
 
     - name: update-ca-trust
-      sudo: yes
+      become: yes
       command: update-ca-trust
 
     - name: remove docker collectd plugin
@@ -58,13 +58,13 @@
       notify: restart collectd
 
     - name: install mantl-dns
-      sudo: yes
+      become: yes
       yum:
         name: "mantl-dns-{{ mantl_dns_version }}"
         state: installed
 
     - name: update /etc/dnsmasq.d/10-consul if needed
-      sudo: yes
+      become: yes
       shell: stat /etc/dnsmasq.d/10-consul.rpmnew && mv /etc/dnsmasq.d/10-consul.rpmnew /etc/dnsmasq.d/10-consul
       failed_when: false
 

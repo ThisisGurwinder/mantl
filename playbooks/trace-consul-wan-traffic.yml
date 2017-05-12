@@ -18,7 +18,7 @@
         - skip_ansible_lint
 
     - name: install wireshark
-      sudo: yes
+      become: yes
       yum:
         name: wireshark
         state: present
@@ -31,7 +31,7 @@
         - skip_ansible_lint
 
     - name: capture sniffer trace (for 2 minutes)
-      sudo: yes
+      become: yes
       command:
         tshark -n
         -a duration:120
@@ -40,14 +40,14 @@
         -w "/tmp/wan-gossip.pcap"
 
     - name: fetch sniffer trace from host to local directory /tmp/traces/
-      sudo: yes
+      become: yes
       fetch:
         src: /tmp/wan-gossip.pcap
         dest: "/tmp/traces/{{ ansible_default_ipv4.address }}-wan-gossip.pcap"
         flat: yes
 
     - name: uninstall wireshark and dependencies
-      sudo: yes
+      become: yes
       yum:
         name: "{{ item }}"
         state: absent

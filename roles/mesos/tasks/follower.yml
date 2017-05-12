@@ -1,6 +1,6 @@
 ---
 - name: configure lvm for mesos data
-  sudo: yes
+  become: yes
   template:
     src: 40-mesos-data-volume.conf.j2
     dest: /etc/mantl/filesystems.d/40-mesos-data-volume.conf
@@ -11,7 +11,7 @@
     - disk
 
 - name: process with mantl storage setup
-  sudo: yes
+  become: yes
   shell: "/usr/bin/mantl-storage-setup"
   when: lvm_physical_device != ""
   tags:
@@ -19,7 +19,7 @@
     - disk
 
 - name: create mesos work dir for non-lvm platforms
-  sudo: yes
+  become: yes
   shell: mkdir -p {{ mesos_work_dir }}
   when: lvm_physical_device == ""
   tags:
@@ -27,7 +27,7 @@
     - disk
 
 - name: install follower configuration
-  sudo: yes
+  become: yes
   yum:
     name: "{{ mesos_agent_package }}"
     state: present
@@ -36,7 +36,7 @@
     - bootstrap
 
 - name: configure mesos-agent
-  sudo: yes
+  become: yes
   template:
     src: mesos-agent.sysconfig.j2
     dest: /etc/sysconfig/mesos-agent
@@ -46,7 +46,7 @@
 
 - name: write credential
   when: do_mesos_follower_auth|bool
-  sudo: yes
+  become: yes
   copy:
     dest: /etc/sysconfig/mesos-agent-credential
     content: "{{ mesos_follower_principal }} {{ mesos_follower_secret }}"
@@ -57,7 +57,7 @@
 
 - name: delete credential
   when: not do_mesos_follower_auth|bool
-  sudo: yes
+  become: yes
   file:
     dest: /etc/sysconfig/mesos-agent-credential
     state: absent
@@ -67,7 +67,7 @@
 
 - name: write mantl-api credential
   when: do_mesos_framework_auth|bool
-  sudo: yes
+  become: yes
   template:
     src: mantl-api-credential.j2
     dest: /etc/sysconfig/mantl-api
@@ -77,7 +77,7 @@
 
 - name: delete mantl-api credential
   when: not do_mesos_framework_auth|bool
-  sudo: yes
+  become: yes
   file:
     dest: /etc/sysconfig/mantl-api
     state: absent

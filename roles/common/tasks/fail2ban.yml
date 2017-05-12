@@ -1,6 +1,6 @@
 ---
 - name: install fail2ban
-  sudo: yes
+  become: yes
   yum:
     name: fail2ban-systemd
     state: latest
@@ -10,7 +10,7 @@
     - fail2ban
 
 - name: enable fail2ban jails
-  sudo: yes
+  become: yes
   copy:
     src: fail2ban/{{ item }}
     dest: /etc/fail2ban/jail.d/{{ item }}
@@ -24,7 +24,7 @@
     - restart fail2ban
 
 - name: enable fail2ban
-  sudo: yes
+  become: yes
   service:
     name: fail2ban
     enabled: yes

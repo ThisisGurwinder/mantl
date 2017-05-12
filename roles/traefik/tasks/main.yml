@@ -1,6 +1,6 @@
 ---
 - name: install traefik
-  sudo: yes
+  become: yes
   yum:
     name: "{{ traefik_package }}"
     state: present
@@ -9,7 +9,7 @@
     - bootstrap
 
 - name: create directory for local traefik service override
-  sudo: yes
+  become: yes
   file:
     dest: /etc/systemd/system/traefik.service.d
     state: directory
@@ -21,13 +21,13 @@
 
 # Kubernetes backend setup
 - name: create secrets directory
-  sudo: yes
+  become: yes
   file:
     path: /var/run/secrets/kubernetes.io/serviceaccount/
     state: directory
 
 - name: write secure token
-  sudo: yes
+  become: yes
   copy:
     src: "{{ playbook_dir }}/ssl/kubernetes/default-token"
     dest: /var/run/secrets/kubernetes.io/serviceaccount/token
@@ -36,7 +36,7 @@
     - traefik
 
 - name: copy k8s ca certificate
-  sudo: yes
+  become: yes
   copy:
     src: "{{ playbook_dir }}/ssl/kubernetes/ca.crt"
     dest: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
@@ -45,7 +45,7 @@
     - traefik
 
 - name: authorize k8s ca certificate
-  sudo: yes
+  become: yes
   copy:
     src: "{{ playbook_dir }}/ssl/kubernetes/ca.crt"
     dest: /etc/pki/ca-trust/source/anchors/ca.crt
@@ -58,7 +58,7 @@
     - traefik
 
 - name: create local traefik service override
-  sudo: yes
+  become: yes
   template:
     src: marathon.conf.j2
     dest: /etc/systemd/system/traefik.service.d/marathon.conf
@@ -72,14 +72,14 @@
     - traefik
 
 - name: add traefik user to tls group
-  sudo: yes
+  become: yes
   user:
     append: yes
     name: traefik
     groups: tls
 
 - name: configure traefik
-  sudo: yes
+  become: yes
   template:
     src: traefik.toml.j2
     dest: /etc/traefik/traefik.toml
@@ -93,7 +93,7 @@
     - traefik
 
 - name: generate traefik consul service
-  sudo: yes
+  become: yes
   copy:
     src: 'traefik-consul.json'
     dest: '/etc/consul/traefik.json'

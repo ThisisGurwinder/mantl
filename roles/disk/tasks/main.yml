@@ -1,6 +1,6 @@
 ---
 - name: configure lvm for mantl data
-  sudo: yes
+  become: yes
   template:
     src: 90-mantl-data-volume.conf.j2
     dest: /etc/mantl/filesystems.d/90-mantl-data-volume.conf
@@ -10,12 +10,12 @@
     - disk
 
 - name: process with mantl storage setup
-  sudo: yes
+  become: yes
   when: lvm_physical_device != ""
   shell: "/usr/bin/mantl-storage-setup"
 
 - name: enable mounts
-  sudo: yes
+  become: yes
   service:
     name: mnt-mantldata.mount
     state: started
@@ -25,7 +25,7 @@
     - disk
 
 - name: create /mnt/mantldata for non-lvm platforms
-  sudo: yes
+  become: yes
   shell: mkdir -p /mnt/mantldata
   when: lvm_physical_device == ""
   tags:

@@ -1,6 +1,6 @@
 ---
 - name: install vault
-  sudo: yes
+  become: yes
   yum:
     name: "{{ vault_package }}"
     state: present
@@ -9,7 +9,7 @@
     - bootstrap
 
 - name: configure vault
-  sudo: yes
+  become: yes
   template:
     src: vault.hcl.j2
     dest: "{{ vault_config_file }}"
@@ -20,7 +20,7 @@
     - vault
 
 - name: enable vault
-  sudo: yes
+  become: yes
   service:
     name: vault
     enabled: yes
