@@ -1,7 +1,7 @@
 ---
 # default is etc/utc in build 20141129 [http://cloud.centos.org/centos/7/images/]
 - name: set timezone to etc/utc
-  sudo: yes
+  become: yes
   file:
     src: /usr/share/zoneinfo/Etc/UTC
     dest: /etc/localtime
@@ -10,7 +10,7 @@
 
 # add hosts to /etc/hosts
 - name: configure hosts file
-  sudo: yes
+  become: yes
   template:
     src: hosts.j2
     dest: /etc/hosts
@@ -19,7 +19,7 @@
     - common
 
 - name: preserve hostname
-  sudo: yes
+  become: yes
   copy:
     src: 02_hostname.cfg
     dest: /etc/cloud/cloud.cfg.d/02_hostname.cfg
@@ -31,7 +31,7 @@
     - common
 
 - name: set persistent hostname
-  sudo: yes
+  become: yes
   copy:
     dest: /etc/hostname
     content: "{{ inventory_hostname }}"
@@ -62,14 +62,14 @@
 
 # add yum-utils if not already installed
 - name: add yum-config-manager
-  sudo: yes
+  become: yes
   yum:
     name: yum-utils
   tags:
     - bootstrap
 
 - name: increase timeouts in YUM
-  sudo: yes
+  become: yes
   shell: "yum-config-manager --save --setopt {{ item.option }}={{ item.value }}"
   with_items:
     - option: timeout
@@ -78,7 +78,7 @@
       value: 30
 
 - name: enable EPEL repo
-  sudo: yes
+  become: yes
   yum:
     name: epel-release
     state: latest
@@ -86,7 +86,7 @@
     - bootstrap
 
 - name: install system utilities
-  sudo: yes
+  become: yes
   yum:
     name: "{{ item }}"
     state: latest
@@ -110,14 +110,14 @@
     - bootstrap
 
 - name: enable chronyd
-  sudo: yes
+  become: yes
   service:
     name: chronyd
     enabled: yes
     state: started
 
 - name: disable firewalld
-  sudo: yes
+  become: yes
   service:
     name: firewalld
     enabled: false
@@ -126,7 +126,7 @@
   failed_when: "command_result|failed and 'No such file or directory' not in command_result.msg"
 
 - name: update setuptools and pip
-  sudo: yes
+  become: yes
   pip:
     name: "{{ item.name }}"
     state: latest
@@ -135,7 +135,7 @@
     - name: setuptools
 
 - name: disable requiretty in sudoers
-  sudo: yes
+  become: yes
   lineinfile:
     dest: /etc/sudoers
     state: present
@@ -143,7 +143,7 @@
     line: "# Defaults	requiretty"
 
 - name: configure selinux
-  sudo: yes
+  become: yes
   selinux:
     policy: "{{ selinux_policy }}"
     state: "{{ selinux_state }}"

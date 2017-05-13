@@ -6,9 +6,9 @@
   tags:
     - marathon
     - collectd
-    
+
 - name: install collectd marathon plugin
-  sudo: yes
+  become: yes
   copy:
     src: marathon-collectd-plugin.py
     dest: /usr/share/collectd/plugins/marathon.py
@@ -19,7 +19,7 @@
     - collectd
 
 - name: configure collectd marathon plugin
-  sudo: yes
+  become: yes
   template:
     src: marathon-collectd-plugin.conf.j2
     dest: /etc/collectd.d/marathon.conf

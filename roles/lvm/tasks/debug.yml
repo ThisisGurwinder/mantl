@@ -1,7 +1,7 @@
 # This rules executed only when debug_storage_setup == true
 
 - name: install partitioner script
-  sudo: yes
+  become: yes
   copy:
     src: mantl-storage-setup.py
     dest: /usr/bin/mantl-storage-setup
@@ -12,7 +12,7 @@
     - lvm
 
 - name: install partitioner service
-  sudo: yes
+  become: yes
   copy:
     src: mantl-storage-setup.service
     dest: /usr/lib/systemd/system/mantl-storage-setup.service
@@ -23,7 +23,7 @@
     - lvm
 
 - name: enable partitioner service
-  sudo: yes
+  become: yes
   service:
     name: mantl-storage-setup.service
     enabled: yes

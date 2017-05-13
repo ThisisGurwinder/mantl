@@ -10,7 +10,7 @@
     command: consul maint -enable -reason "{{ lookup('env', 'USER') }} initiated reboot"
 
   - name: reboot host
-    sudo: yes
+    become: yes
     shell: nohup bash -c "sleep 2s && reboot" &
     register: reboot
 

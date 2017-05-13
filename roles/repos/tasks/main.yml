@@ -1,5 +1,5 @@
 - name: enable yum repos
-  sudo: yes
+  become: yes
   copy:
     src: "{{ item }}"
     dest: "/etc/yum.repos.d/{{ item }}"
@@ -9,7 +9,7 @@
     - bootstrap
 
 - name: enable templated yum repos
-  sudo: yes
+  become: yes
   template:
     src: "{{ item }}"
     dest: "/etc/yum.repos.d/{{ item }}"

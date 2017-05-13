@@ -1,13 +1,13 @@
 ---
 - name: assert nginx folder
-  sudo: yes
+  become: yes
   file: path=/etc/nginx state=directory
 
   tags:
     - consul
 
 - name: deploy nginx template
-  sudo: yes
+  become: yes
   copy:
     src: consul.nginx
     dest: /etc/nginx/templates/consul.nginx
@@ -30,7 +30,7 @@
     - consul
 
 - name: install nginx admin password
-  sudo: yes
+  become: yes
   run_once: yes
   command: consul-cli kv-write --token={{ consul_acl_secure_token }} secure/service/nginx/auth/users/admin '{{ nginx_admin_password_encrypted }}'
   when: nginx_admin_password_encrypted is defined
@@ -38,7 +38,7 @@
     - consul
 
 - name: enable nginx-consul
-  sudo: yes
+  become: yes
   service:
     name: nginx-consul
     enabled: yes

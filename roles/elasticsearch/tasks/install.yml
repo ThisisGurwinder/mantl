@@ -1,6 +1,6 @@
 ---
 - name: create packages json
-  sudo: yes
+  become: yes
   template:
     src: "{{ item.value.template }}"
     dest: /etc/marathon/apps/{{ item.value.dest }}
@@ -9,7 +9,7 @@
     - elasticsearch
 
 - name: check if services are registered
-  sudo: yes
+  become: yes
   shell: "consul-cli catalog-service {{ item.value.service_name }} | jq '.|length'"
   register: elasticsearch_service_count
   changed_when: false
@@ -18,7 +18,7 @@
     - elasticsearch
 
 - name: install elasticsearch
-  sudo: yes
+  become: yes
   command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/elasticsearch @/etc/marathon/apps/{{ es_packages.elasticsearch.dest }}
   when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch' }}"
   with_items: elasticsearch_service_count.results
@@ -26,7 +26,7 @@
     - elasticsearch
 
 - name: install elasticsearch-client
-  sudo: yes
+  become: yes
   command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/elasticsearch-client @/etc/marathon/apps/{{ es_packages['elasticsearch-client'].dest }}
   when: "{{ item.stdout|int == 0 and item.item.key == 'elasticsearch-client' }}"
   with_items: elasticsearch_service_count.results
@@ -34,7 +34,7 @@
     - elasticsearch
 
 - name: remove packages json
-  sudo: yes
+  become: yes
   file:
     dest: /etc/marathon/apps/{{ item.value.dest }}
     state: absent

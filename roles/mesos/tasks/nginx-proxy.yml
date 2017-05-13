@@ -1,6 +1,6 @@
 ---
 - name: create nginx configuration directories
-  sudo: yes
+  become: yes
   file:
     state: directory
     path: "{{ item }}"
@@ -11,7 +11,7 @@
     - mesos
 
 - name: copy nginx configuration
-  sudo: yes
+  become: yes
   copy:
     src: mesos-leader.nginx
     dest: /etc/nginx/templates/mesos-leader.nginx
@@ -22,7 +22,7 @@
 
 - name: configure nginx
   run_once: yes
-  sudo: yes
+  become: yes
   command: consul-cli kv-write --token={{ consul_acl_secure_token }} "{{ item.path }}" "{{ item.value }}"
   with_items:
     - path: secure/mesos/nginx/do_ssl

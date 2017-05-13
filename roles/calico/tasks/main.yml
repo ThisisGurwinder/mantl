@@ -1,6 +1,6 @@
 ---
 - name: install calico
-  sudo: yes
+  become: yes
   yum:
     name: calico-{{ calico_version}}
     state: present
@@ -9,7 +9,7 @@
     - bootstrap
 
 - name: ensure calico docker image is present
-  sudo: yes
+  become: yes
   command: /usr/bin/docker pull {{ calico_image }}:{{ calico_image_tag }}
   notify:
     - restart calico
@@ -18,7 +18,7 @@
     - bootstrap
 
 - name: set calico environment
-  sudo: yes
+  become: yes
   template:
     src: calico.env.j2
     dest: /etc/default/calico
@@ -32,7 +32,7 @@
     - calico
 
 - name: generate systemd unit file
-  sudo: yes
+  become: yes
   template:
     src: calico.service.j2
     dest: /usr/lib/systemd/system/calico.service
@@ -46,7 +46,7 @@
     - calico
 
 - name: install consul check script
-  sudo: yes
+  become: yes
   copy:
     src: consul-check-calico-node
     dest: /usr/local/bin
@@ -56,7 +56,7 @@
     - calico
 
 - name: register calico with consul
-  sudo: yes
+  become: yes
   copy:
     src: calico-service.json
     dest: /etc/consul
@@ -67,7 +67,7 @@
     - calico
 
 - name: calico etc directory
-  sudo: yes
+  become: yes
   file:
     path: /etc/calico
     state: directory
@@ -75,7 +75,7 @@
     - calico
 
 - name: put calico-mesos integration file
-  sudo: yes
+  become: yes
   copy:
     src: modules.json
     dest: /etc/calico/modules.json
@@ -94,13 +94,13 @@
 - include: calico-configure.yml
 
 - name: reload calico systemd file
-  sudo: yes
+  become: yes
   command: "systemctl daemon-reload"
   tags:
     - calico
 
 - name: enable and start calico
-  sudo: yes
+  become: yes
   service:
     name: calico
     enabled: yes
@@ -109,7 +109,7 @@
     - calico
 
 - name: ensure mesos-slave directory exists
-  sudo: yes
+  become: yes
   file:
     path: /etc/mesos-slave/
     state: directory
@@ -118,7 +118,7 @@
     mode: 0755
 
 - name: check if mesos agent is running
-  sudo: yes
+  become: yes
   command: systemctl is-active mesos-slave
   register: mesos_agent_active
   failed_when: false

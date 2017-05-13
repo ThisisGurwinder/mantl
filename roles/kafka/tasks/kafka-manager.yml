@@ -1,6 +1,6 @@
 ---
 - name: create packages json
-  sudo: yes
+  become: yes
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -11,7 +11,7 @@
     - kafka
 
 - name: check if kafka-manager service is registered
-  sudo: yes
+  become: yes
   run_once: yes
   shell: "consul-cli catalog-service {{ kafka_manager_service_name }} | jq '.|length'"
   register: kafka_manager_service_count
@@ -20,7 +20,7 @@
     - kafka
 
 - name: install kafka-manager
-  sudo: yes
+  become: yes
   run_once: yes
   command: consul-cli kv-write --token={{ consul_acl_mantl_api_token }} mantl-install/apps/kafka-manager @/etc/marathon/apps/kafka-manager.json
   when: kafka_manager_service_count.stdout|int == 0
@@ -28,7 +28,7 @@
     - kafka
 
 - name: remove packages json
-  sudo: yes
+  become: yes
   file:
     dest: item
     state: absent

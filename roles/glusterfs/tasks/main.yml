@@ -1,6 +1,6 @@
 ---
 - name: install glusterfs repo package
-  sudo: yes
+  become: yes
   yum:
     name: "{{ glusterfs_repo_package }}"
     state: present

@@ -1,6 +1,6 @@
 ---
 - name: write pod file
-  sudo: yes
+  become: yes
   copy:
     src: kubernetes-dashboard.yaml
     dest: "{{ kube_manifest_dir }}/kubernetes-dashboard.yaml"
@@ -20,7 +20,7 @@
     - kubernetes
 
 - name: create or update dashboard
-  sudo: yes
+  become: yes
   kube:
     namespace: kube-system
     resource: rc

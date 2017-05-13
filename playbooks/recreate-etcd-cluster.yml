@@ -11,15 +11,15 @@
   gather_facts: no
   tasks:
     - name: Stop etcd
-      sudo: yes
+      become: yes
       service:
         name: etcd
         state: stopped
     - name: Delete etcd data directory
-      sudo: yes
+      become: yes
       shell: rm -rf {{ etcd_data_dir }}/*
     - name: Start etcd
-      sudo: yes
+      become: yes
       service:
         name: etcd
         state: started

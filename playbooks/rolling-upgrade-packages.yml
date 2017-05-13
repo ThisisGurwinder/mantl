@@ -5,26 +5,26 @@
   tasks:
 
   - name: clean yum
-    sudo: yes
+    become: yes
     command: yum clean all
     tags:
       - skip_ansible_lint
 
   - name: upgrade kernel package
-    sudo: yes
+    become: yes
     yum:
       name: kernel
       state: latest
     register: kernel
 
   - name: upgrade all packages
-    sudo: yes
+    become: yes
     yum:
       name: "*"
       state: latest
 
   - name: reboot host
-    sudo: yes
+    become: yes
     shell: nohup bash -c "sleep 2s && reboot" &
     register: reboot
     when: kernel.changed

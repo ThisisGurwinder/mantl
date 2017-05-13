@@ -1,6 +1,6 @@
 ---
 - name: configure members of wheel group for passwordless sudo
-  sudo: yes
+  become: yes
   lineinfile:
     dest: /etc/sudoers
     regexp: "^%wheel"
@@ -10,7 +10,7 @@
     - users
 
 - name: create groups
-  sudo: yes
+  become: yes
   group:
     name: "{{ item.1 }}"
     state: present
@@ -21,7 +21,7 @@
     - users
 
 - name: create os users
-  sudo: yes
+  become: yes
   user:
     name: "{{ item.name }}"
     groups: "{{ item.groups | join(',') }}"
@@ -34,7 +34,7 @@
     - users
 
 - name: set authorized ssh keys for users
-  sudo: yes
+  become: yes
   authorized_key:
     user: "{{ item.0.name }}"
     key: "{{ item.1 }}"

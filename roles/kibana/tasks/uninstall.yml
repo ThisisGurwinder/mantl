@@ -1,6 +1,6 @@
 ---
 - name: discover mantl-api url
-  sudo: no
+  become: no
   run_once: yes
   register: mantl_api_url
   shell: consul-cli catalog-service mantl-api | jq -r '.[0] | .ServiceAddress + ":" + (.ServicePort|tostring)'
@@ -8,7 +8,7 @@
     - kibana
 
 - name: remove packages
-  sudo: no
+  become: no
   run_once: yes
   shell: "curl -XDELETE -d '{\"name\": \"{{ item|quote }}\"}' http://{{ mantl_api_url.stdout }}/1/install"
   with_items:

@@ -1,7 +1,7 @@
 ---
 # Workaround for https://github.com/CiscoCloud/mantl/issues/161
 - name: install latest device-mapper-libs
-  sudo: yes
+  become: yes
   yum:
     name: device-mapper-libs
     state: latest
@@ -10,7 +10,7 @@
     - bootstrap
 
 - name: enable Docker, Inc. yum repo
-  sudo: yes
+  become: yes
   copy:
     src: docker.repo
     dest: /etc/yum.repos.d/docker.repo
@@ -19,7 +19,7 @@
   when: docker_package_source is defined and docker_package_source == "docker"
 
 - name: remove old docker package
-  sudo: yes
+  become: yes
   yum:
     name: "{{ item }}"
     state: absent
@@ -32,7 +32,7 @@
     - bootstrap
 
 - name: create rsyslog.d
-  sudo: yes
+  become: yes
   file:
     dest: /etc/rsyslog.d
     state: directory
@@ -40,7 +40,7 @@
     - docker
 
 - name: create docker entry for syslogd
-  sudo: yes
+  become: yes
   copy:
     dest: /etc/rsyslog.d/10-docker.conf
     content: |
@@ -54,7 +54,7 @@
 
 
 - name: create directory for systemd drop-ins
-  sudo: yes
+  become: yes
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
@@ -65,7 +65,7 @@
 # We have to restart docker when these files have changed, otherwise the updated
 # configuration won't come into effect.
 - name: systemd drop-in for options
-  sudo: yes
+  become: yes
   template:
     src:  "{{ item }}.j2"
     dest: "/etc/systemd/system/docker.service.d/{{ item }}"
@@ -78,7 +78,7 @@
     - docker
 
 - name: systemd drop-in for ExecStart
-  sudo: yes
+  become: yes
   copy:
     src: 20-ExecStart.conf.j2
     dest: /etc/systemd/system/docker.service.d/20-ExecStart.conf
@@ -88,7 +88,7 @@
     - docker
 
 - name: install docker packages
-  sudo: yes
+  become: yes
   yum:
     name: "{{ item }}"
     state: present
@@ -100,7 +100,7 @@
     - bootstrap
 
 - name: ensure docker config dir exists
-  sudo: yes
+  become: yes
   file:
     path: /root/.docker
     state: directory
@@ -108,7 +108,7 @@
     - docker
 
 - name: setup private docker registry credentials
-  sudo: yes
+  become: yes
   when: do_private_docker_registry
   template:
     src: config.json.j2
@@ -118,7 +118,7 @@
   register: docker_registry_credentials
 
 - name: add docker registry credentials to /etc/
-  sudo: yes
+  become: yes
   when: do_private_docker_registry and docker_registry_credentials.changed
   command: tar cvzf /etc/docker.tar.gz .docker
   args:
@@ -131,7 +131,7 @@
   when: docker_lvm_backed|bool
 
 - name: enable docker
-  sudo: yes
+  become: yes
   service:
     name: docker
     enabled: yes
@@ -141,7 +141,7 @@
     - bootstrap # needed to install Docker images during bootstrap
 
 - name: install docker-gc
-  sudo: yes
+  become: yes
   yum:
     name: docker-gc
     state: latest

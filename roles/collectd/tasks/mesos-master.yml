@@ -7,7 +7,7 @@
     - collectd
 
 - name: install collectd mesos-master plugin
-  sudo: yes
+  become: yes
   copy:
     src: mesos-master.py
     dest: /usr/share/collectd/plugins
@@ -17,7 +17,7 @@
     - collectd
 
 - name: configure collectd mesos-master plugin
-  sudo: yes
+  become: yes
   template:
     src: mesos-master.conf.j2
     dest: /etc/collectd.d/mesos-master.conf

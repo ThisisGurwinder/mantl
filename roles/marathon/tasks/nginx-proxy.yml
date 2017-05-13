@@ -1,6 +1,6 @@
 ---
 - name: create nginx configuration directories
-  sudo: yes
+  become: yes
   file:
     state: directory
     path: "{{ item }}"
@@ -11,7 +11,7 @@
     - marathon
 
 - name: copy nginx configuration
-  sudo: yes
+  become: yes
   copy:
     src: marathon.nginx
     dest: /etc/nginx/templates

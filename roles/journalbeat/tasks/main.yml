@@ -1,6 +1,6 @@
 ---
 - name: create journalbeat configration dir
-  sudo: yes
+  become: yes
   file:
     path: /etc/journalbeat
     state: directory
@@ -8,7 +8,7 @@
     - journalbeat
 
 - name: configure journalbeat
-  sudo: yes
+  become: yes
   template:
     src: journalbeat.yml.j2
     dest: /etc/journalbeat/journalbeat.yml
@@ -18,7 +18,7 @@
     - journalbeat
 
 - name: install journalbeat systemd service
-  sudo: yes
+  become: yes
   template:
     src: journalbeat.service.j2
     dest: /usr/lib/systemd/system/journalbeat.service
@@ -29,7 +29,7 @@
     - journalbeat
 
 - name: enable and start journalbeat
-  sudo: yes
+  become: yes
   service:
     enabled: yes
     name: journalbeat

@@ -1,6 +1,6 @@
 ---
 - name: give consul privileges to run docker commands
-  when: "{{ current_role in ['consul', 'logstash'] }}"
+  when: current_role in ['consul', 'logstash']
   become: yes
   copy:
     content: |

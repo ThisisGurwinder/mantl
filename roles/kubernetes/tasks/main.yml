@@ -1,6 +1,6 @@
 ---
 - name: create kubernetes config directories
-  sudo: yes
+  become: yes
   file:
     path: "{{ item }}"
     state: directory
@@ -15,7 +15,7 @@
     - kubernetes
 
 - name: generate kube-proxy manifest
-  sudo: yes
+  become: yes
   template:
     src: "kube-proxy.yml"
     dest: "{{ kube_manifest_dir }}/kube-proxy.yml"
@@ -26,7 +26,7 @@
     - kubernetes
 
 - name: install kubernetes binaries
-  sudo: yes
+  become: yes
   yum:
     name: "{{ kubernetes_package }}"
     state: present
@@ -34,7 +34,7 @@
     - kubernetes
 
 - name: generate kubelet systemd unit
-  sudo: yes
+  become: yes
   template:
     src: kubelet.service.j2
     dest: /usr/lib/systemd/system/kubelet.service
@@ -48,7 +48,7 @@
     - kubernetes
 
 - name: generate kubelet kubeconfig
-  sudo: yes
+  become: yes
   template:
     src: "kubeconfig.yml.j2"
     dest: "/etc/kubernetes/kubeconfig.yml"
@@ -62,7 +62,7 @@
     - kubernetes
 
 - name: pull hyperkube docker image
-  sudo: yes
+  become: yes
   command: "docker pull {{ kube_hyperkube_image }}:{{ kube_hyperkube_image_tag }}"
   register: docker_pull_result
   changed_when: docker_pull_result.stdout.find('newer') > -1
@@ -75,7 +75,7 @@
     - kubernetes
 
 - name: enable and start kubelet service
-  sudo: yes
+  become: yes
   service:
     name: kubelet
     enabled: yes

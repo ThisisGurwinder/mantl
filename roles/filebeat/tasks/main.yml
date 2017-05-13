@@ -1,6 +1,6 @@
 ---
 - name: create filebeat configration dir
-  sudo: yes
+  become: yes
   file:
     path: /etc/filebeat
     state: directory
@@ -8,7 +8,7 @@
     - filebeat
 
 - name: configure filebeat
-  sudo: yes
+  become: yes
   template:
     src: filebeat.yml.j2
     dest: /etc/filebeat/filebeat.yml
@@ -18,7 +18,7 @@
     - filebeat
 
 - name: install filebeat systemd service
-  sudo: yes
+  become: yes
   template:
     src: filebeat.service.j2
     dest: /usr/lib/systemd/system/filebeat.service
@@ -29,7 +29,7 @@
     - filebeat
 
 - name: enable and start filebeat
-  sudo: yes
+  become: yes
   service:
     enabled: yes
     name: filebeat

@@ -1,4 +1,4 @@
 ---
 - name: reload consul-template
-  sudo: yes
+  become: yes
   command: systemctl reload consul-template
